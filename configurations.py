@@ -1,10 +1,13 @@
 # Description: This file contains the configurations for AutoRestTest.
 # Change the values for the variables as described in the README.
+import os
 
-SPECIFICATION_LOCATION = "aratrl-openapi/market2.yaml" # The location of the Specification file relative to the root directory.
+# SPECIFICATION_LOCATION = "aratrl-openapi/market2.yaml" # The location of the Specification file relative to the root directory.
 # Note: Only .yaml and .json files are supported. The Specification file must be in the OpenAPI 3.0 format.
 # The file extension must be specified in the path (e.g., .yaml or .json).
+SPECIFICATION_LOCATION = os.getenv("SPECIFICATION_LOCATION")
 
+OPENAI_API_BASE_URL = "https://api.chatanywhere.tech/v1"
 OPENAI_LLM_ENGINE = "gpt-4o-mini" # The OpenAI language model engine to use for the value agent generation.
 DEFAULT_TEMPERATURE = 0.7 # The default temperature for the OpenAI language model.
 # Note: The OpenAI engine must be compatible with the JSON mode. Also, for the cost output to be accurate, the engine must be either "gpt-4o", "gpt-4o-mini", "o1", or "o1-mini".
@@ -24,7 +27,7 @@ MAX_EXPLORATION = 1 # The maximum exploration rate (epsilon) for the Q-learning 
 # Note: Epsilon-decay is implemented in the Q-learning agent such that the exploration rate decreases over time to 0.1.
 
 # The following variables are responsible for the request generation configurations.
-TIME_DURATION = 1200 # The time duration for the request generation process.
+TIME_DURATION = 600 # The time duration for the request generation process.
 MUTATION_RATE = 0.2 # The mutation rate for the request generation process.
 
 

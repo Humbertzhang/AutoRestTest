@@ -15,7 +15,7 @@ from src.graph.specification_parser import ParameterProperties, SchemaProperties
 from src.prompts.generator_prompts import FIX_JSON_OBJ
 from src.prompts.system_prompts import DEFAULT_SYSTEM_MESSAGE, FIX_JSON_SYSTEM_MESSAGE
 
-from configurations import OPENAI_LLM_ENGINE, DEFAULT_TEMPERATURE
+from configurations import OPENAI_LLM_ENGINE, OPENAI_API_BASE_URL, DEFAULT_TEMPERATURE
 
 load_dotenv()
 
@@ -208,10 +208,10 @@ class OpenAILanguageModel:
         return OpenAILanguageModel.cumulative_cost
 
     def __init__(self, engine = OPENAI_LLM_ENGINE, temperature = DEFAULT_TEMPERATURE, max_tokens = 4000):
-        self.api_key = os.getenv("OPENAI_API_KEY")
+        self.api_key = os.getenv("CHAT_ANYWHERE_OPENAI_API_KEY")
         if self.api_key is None or self.api_key.strip() == "":
             raise ValueError("OPENAI API key is required for OpenAI language model, found None or empty string.")
-        self.client = OpenAI(api_key=self.api_key)
+        self.client = OpenAI(api_key=self.api_key, base_url=OPENAI_API_BASE_URL)
         self.engine = engine
         self.temperature = temperature
         self.max_tokens = max_tokens
