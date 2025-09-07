@@ -1,11 +1,24 @@
 # Description: This file contains the configurations for AutoRestTest.
 # Change the values for the variables as described in the README.
 import os
+import sys
 
 # SPECIFICATION_LOCATION = "aratrl-openapi/market2.yaml" # The location of the Specification file relative to the root directory.
 # Note: Only .yaml and .json files are supported. The Specification file must be in the OpenAPI 3.0 format.
 # The file extension must be specified in the path (e.g., .yaml or .json).
 SPECIFICATION_LOCATION = os.getenv("SPECIFICATION_LOCATION")
+
+# The following variables are responsible for the request generation configurations.
+TIME_DURATION = int(os.getenv("TIME_DURATION", 3600)) # The time duration for the request generation process.
+MAX_REQUEST_CNT = int(os.getenv("MAX_REQUEST_CNT", sys.maxsize))  # 最多请求次数，可以在大于duration的优先级停止. 0为没有限制
+
+RARE_LIMIT_SLEEP = int(os.getenv("RARE_LIMIT_SLEEP", 0))
+if "bills" in SPECIFICATION_LOCATION:
+    RARE_LIMIT_SLEEP = 1
+print(f"{RARE_LIMIT_SLEEP=}")
+
+MUTATION_RATE = 0.2 # The mutation rate for the request generation process.
+
 
 OPENAI_API_BASE_URL = "https://api.chatanywhere.tech/v1"
 OPENAI_LLM_ENGINE = "gpt-4o-mini" # The OpenAI language model engine to use for the value agent generation.
@@ -25,10 +38,4 @@ LEARNING_RATE = 0.1 # The learning rate (alpha) for the Q-learning agent.
 DISCOUNT_FACTOR = 0.9 # The discount factor (gamma) for the Q-learning agent.
 MAX_EXPLORATION = 1 # The maximum exploration rate (epsilon) for the Q-learning agent action selection.
 # Note: Epsilon-decay is implemented in the Q-learning agent such that the exploration rate decreases over time to 0.1.
-
-# The following variables are responsible for the request generation configurations.
-TIME_DURATION = 600 # The time duration for the request generation process.
-MUTATION_RATE = 0.2 # The mutation rate for the request generation process.
-
-
 

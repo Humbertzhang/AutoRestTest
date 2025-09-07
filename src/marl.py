@@ -11,7 +11,7 @@ import numpy as np
 import requests
 import shelve
 
-from configurations import ENABLE_HEADER_AGENT
+from configurations import ENABLE_HEADER_AGENT, MAX_REQUEST_CNT, RARE_LIMIT_SLEEP
 from src.generate_graph import OperationGraph
 from src.graph.specification_parser import OperationProperties
 from src.reinforcement.agents import OperationAgent, HeaderAgent, ParameterAgent, ValueAgent, ValueAction, BodyObjAgent, \
@@ -50,6 +50,12 @@ class QLearning:
         self._init_parameter_tracking()
         self._init_body_tracking()
         self._init_response_tracking()
+
+    def get_request_cnts(self) -> int:
+        rc = 0
+        for k, v in self.responses.items():
+            rc += v
+        return rc
 
     def print_q_tables(self):
         print("OPERATION Q-TABLE: ", self.operation_agent.q_table)
@@ -581,6 +587,14 @@ class QLearning:
         epsilon_decay_rate = (self.epsilon - target_epsilon) / (self.time_duration * 0.7) if target_epsilon < self.epsilon else 0
 
         while time.time() - start_time < self.time_duration:
+            rc = self.get_request_cnts()
+            if rc > MAX_REQUEST_CNT:
+                print(f"Request count: {rc} reached max request cnt: {MAX_REQUEST_CNT}, stop execution")
+                break
+
+            if RARE_LIMIT_SLEEP > 0:
+                time.sleep(RARE_LIMIT_SLEEP)
+
             self.epsilon_decay(epsilon_decay_rate)
 
             operation_id = self.operation_agent.get_action()
@@ -846,6 +860,7 @@ class QLearning:
                     self.operation_response_counter[operation_id][response.status_code] += 1
 
                 if 500 <= response.status_code < 600:
+                    print(f"500 ERROR: {response.content=}")
                     if operation_id not in self.errors:
                         self.errors[operation_id] = 1
                     else:

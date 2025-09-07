@@ -164,6 +164,7 @@ class AutoRestTest:
     def init_graph(self, spec_name: str, spec_path: str, embedding_model: EmbeddingModel) -> OperationGraph:
         spec_parser = SpecificationParser(spec_path=spec_path, spec_name=spec_name)
         api_url = get_api_url(spec_parser, self.local_test)
+        print(f"{spec_name=} {api_url=} {spec_path=} init...")
         operation_graph = OperationGraph(spec_path=spec_path, spec_name=spec_name, spec_parser=spec_parser, embedding_model=embedding_model)
         request_generator = RequestGenerator(operation_graph=operation_graph, api_url=api_url, is_naive=self.is_naive)
         operation_graph.assign_request_generator(request_generator)

@@ -40,6 +40,7 @@ def get_body_object_combinations(body_schema: SchemaProperties) -> List[Tuple[st
     return get_combinations(get_body_params(body_schema))
 
 def get_combinations(arr) -> List[Tuple]:
+    arr = list(arr)
     combinations = []
     max_size = 10
     # Empirically determined - 16 is max number before size grows too large, 10 is a good balance for ensuring proper storage (> 21k)
